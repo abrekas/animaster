@@ -7,7 +7,7 @@ function addListeners() {
     document.getElementById('fadeInPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeInBlock');
-            anim.fadeIn(block, 5000);
+            anim.addFadeIn(5000).play(block);
         });
 
     document.getElementById('movePlay')
@@ -20,12 +20,12 @@ function addListeners() {
     document.getElementById('scalePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('scaleBlock');
-            anim.scale(block, 1000, 1.25);
+            anim.addScale(1000, 1.25).play(block);
         });
     document.getElementById('fadeOut')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeOutBlock');
-            anim.fadeOut(block, 5000);
+            anim.addFadeOut(5000).play(block);
         });
     document.getElementById('moveAndHide')
         .addEventListener('click', function () {
@@ -181,10 +181,31 @@ function animaster() {
             return this;
         },
 
+        addScale: function addScale(duration, ratio) {
+            _steps.push(["scale", duration, ratio])
+            console.log(_steps)
+            return this;
+        },
+
+        addFadeIn: function addFadeIn(duration) {
+            _steps.push(["fadeIn", duration])
+            console.log(_steps)
+            return this;
+        },
+
+        addFadeOut: function addFadeOut(duration) {
+            _steps.push(["fadeOut", duration])
+            console.log(_steps)
+            return this;
+        },
+
         play: function play(element) {
             let step = _steps.pop();
             switch (step[0]) {
-                case "move": this.move(element, step[1], step[2])
+                case "move": this.move(element, step[1], step[2]); break
+                case "scale": this.scale(element, step[1], step[2]); break
+                case "fadeIn": this.fadeIn(element, step[1]); break
+                case "fadeOut": this.fadeOut(element, step[1]); break
             }
         },
 
