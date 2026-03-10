@@ -26,7 +26,7 @@ function addListeners() {
     document.getElementById('scalePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('scaleBlock');
-            anim.addScale(1000, 1.25).playStep(block);
+            anim.addScale(1000, 1.25).play(block);
         });
     document.getElementById('fadeOut')
         .addEventListener('click', function () {
