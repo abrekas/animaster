@@ -30,13 +30,13 @@ function addListeners() {
     document.getElementById('moveAndHide')
         .addEventListener('click', function () {
             const block = document.getElementById('moveAndHideBlock');
-            anim.moveAndHide(block, 3000);
+            let timeoutID = anim.moveAndHide(block, 3000);
         });
     
     document.getElementById('ResetMoveAndHide')
         .addEventListener('click', function () {
-            const block = document.getElementById('heartBeatingBlock');
-            anim.heartBeating(block);
+            const block = document.getElementById('moveAndHideBlock');
+            anim.resetMoveAndHide(block);
         });
 
     document.getElementById('showAndHide')
@@ -100,9 +100,9 @@ function resetMoveAndScale(element) {
 
 function animaster() {
     let stopHeartTimer = null
+    let moveAndHideTimeoutID = 0;
 
     return animasterObject = {
-        
         /**
          * Блок плавно появляется из прозрачного.
          * @param element — HTMLElement, который надо анимировать
@@ -187,11 +187,15 @@ function animaster() {
 
         moveAndHide: function moveAndHide(element, duration){
             this.move(element, duration*0.4, {x: 100, y: 20});
-            setTimeout(this.fadeOut, duration*0.6, element, duration*0.4);
+            moveAndHideTimeoutID = setTimeout(this.fadeOut, duration*0.6, element, duration*0.4);
         },
 
-        resetMoveAndHide: function() {
-
+        resetMoveAndHide: function(element) {
+            element.style.transitionDuration = null;
+            element.style.transform = null;
+            element.classList.remove('hide');
+            element.classList.add('show');
+            clearTimeout(moveAndHideTimeoutID);
         }
     }
 }
