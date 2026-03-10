@@ -69,38 +69,38 @@ function getTransform(translation, ratio) {
     return result.join(' ');
 }
 
-/**
-* Сброс fadeIn анимации
-* @param element — HTMLElement, на котором надо сбросить состояние
-*/
-function resetFadeIn(element) {
-        element.style.transitionDuration = null;
-        element.classList.remove('show');
-        element.classList.add('hide');
-    }
-
-/**
-* Сброс fadeOut анимации
-* @param element — HTMLElement, на котором надо сбросить состояние
-*/
-function resetFadeOut(element) {
-    element.style.transitionDuration = null;
-    element.classList.remove('hide');
-    element.classList.add('show');
-}
-
-/**
- * Сброс MoveAndScale анимации
- * @param element — HTMLElement, на котором надо сбросить состояние
- */
-function resetMoveAndScale(element) {
-    element.style.transitionDuration = null;
-    element.style.transform = null;
-}
-
 function animaster() {
     let stopHeartTimer = null
     let _steps = [];
+
+    /**
+    * Сброс fadeIn анимации
+    * @param element — HTMLElement, на котором надо сбросить состояние
+    */
+    function resetFadeIn(element) {
+            element.style.transitionDuration = null;
+            element.classList.remove('show');
+            element.classList.add('hide');
+        }
+
+    /**
+    * Сброс fadeOut анимации
+    * @param element — HTMLElement, на котором надо сбросить состояние
+    */
+    function resetFadeOut(element) {
+        element.style.transitionDuration = null;
+        element.classList.remove('hide');
+        element.classList.add('show');
+    }
+
+    /**
+     * Сброс MoveAndScale анимации
+     * @param element — HTMLElement, на котором надо сбросить состояние
+     */
+    function resetMoveAndScale(element) {
+        element.style.transitionDuration = null;
+        element.style.transform = null;
+    }
 
     return animasterObject = {
         
