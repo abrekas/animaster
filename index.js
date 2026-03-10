@@ -97,8 +97,10 @@ function resetMoveAndScale(element) {
 
 function animaster() {
     let stopHeartTimer = null
+    let _steps = [];
 
     return animasterObject = {
+        
         
         /**
          * Блок плавно появляется из прозрачного.
@@ -171,14 +173,15 @@ function animaster() {
         },
 
         addMove: function addMove(duration, translation) {
-            const dur = duration;
-            const trans = translation;
-            let animasterObj = this;
+            _steps.push(["move", duration, translation])
+            console.log(_steps)
+            return this;
+        },
 
-            return moveObj = {
-                play: function play(element) {
-                    animasterObj.move(element, dur, trans)
-                }
+        play: function play(element) {
+            let step = _steps.pop();
+            switch (step[0]) {
+                case "move": this.move(element, step[1], step[2])
             }
         }
     }
