@@ -7,7 +7,7 @@ function addListeners() {
     document.getElementById('fadeInPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeInBlock');
-            anim.fadeIn(block, 5000);
+            anim.addFadeIn(5000).play(block);
         });
 
     document.getElementById('movePlay')
@@ -20,12 +20,12 @@ function addListeners() {
     document.getElementById('scalePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('scaleBlock');
-            anim.scale(block, 1000, 1.25);
+            anim.addScale(1000, 1.25).play(block);
         });
     document.getElementById('fadeOut')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeOutBlock');
-            anim.fadeOut(block, 5000);
+            anim.addFadeOut(5000).play(block);
         });
     document.getElementById('moveAndHide')
         .addEventListener('click', function () {
@@ -42,7 +42,7 @@ function addListeners() {
     document.getElementById('showAndHide')
         .addEventListener('click', function () {
             const block = document.getElementById('showAndHideBlock');
-            animaster().showAndHide(block, 6000);
+            animaster().showAndHide(block, 5000);
         });
     
     document.getElementById('heartBeating')
@@ -69,40 +69,42 @@ function getTransform(translation, ratio) {
     return result.join(' ');
 }
 
-/**
-* Сброс fadeIn анимации
-* @param element — HTMLElement, на котором надо сбросить состояние
-*/
-function resetFadeIn(element) {
-        element.style.transitionDuration = null;
-        element.classList.remove('show');
-        element.classList.add('hide');
-    }
-
-/**
-* Сброс fadeOut анимации
-* @param element — HTMLElement, на котором надо сбросить состояние
-*/
-function resetFadeOut(element) {
-    element.style.transitionDuration = null;
-    element.classList.remove('hide');
-    element.classList.add('show');
-}
-
-/**
- * Сброс MoveAndScale анимации
- * @param element — HTMLElement, на котором надо сбросить состояние
- */
-function resetMoveAndScale(element) {
-    element.style.transitionDuration = null;
-    element.style.transform = null;
-}
-
 function animaster() {
     let stopHeartTimer = null
+    let _steps = [];
+
+    /**
+    * Сброс fadeIn анимации
+    * @param element — HTMLElement, на котором надо сбросить состояние
+    */
+    function resetFadeIn(element) {
+            element.style.transitionDuration = null;
+            element.classList.remove('show');
+            element.classList.add('hide');
+        }
+
+    /**
+    * Сброс fadeOut анимации
+    * @param element — HTMLElement, на котором надо сбросить состояние
+    */
+    function resetFadeOut(element) {
+        element.style.transitionDuration = null;
+        element.classList.remove('hide');
+        element.classList.add('show');
+    }
+
+    /**
+     * Сброс MoveAndScale анимации
+     * @param element — HTMLElement, на котором надо сбросить состояние
+     */
+    function resetMoveAndScale(element) {
+        element.style.transitionDuration = null;
+        element.style.transform = null;
+    }
     let moveAndHideTimeoutID = 0;
 
     return animasterObject = {
+        
         /**
          * Блок плавно появляется из прозрачного.
          * @param element — HTMLElement, который надо анимировать
@@ -174,14 +176,36 @@ function animaster() {
         },
 
         addMove: function addMove(duration, translation) {
-            const dur = duration;
-            const trans = translation;
-            let animasterObj = this;
+            _steps.push(["move", duration, translation])
+            console.log(_steps)
+            return this;
+        },
 
-            return moveObj = {
-                play: function play(element) {
-                    animasterObj.move(element, dur, trans)
-                }
+        addScale: function addScale(duration, ratio) {
+            _steps.push(["scale", duration, ratio])
+            console.log(_steps)
+            return this;
+        },
+
+        addFadeIn: function addFadeIn(duration) {
+            _steps.push(["fadeIn", duration])
+            console.log(_steps)
+            return this;
+        },
+
+        addFadeOut: function addFadeOut(duration) {
+            _steps.push(["fadeOut", duration])
+            console.log(_steps)
+            return this;
+        },
+
+        play: function play(element) {
+            let step = _steps.pop();
+            switch (step[0]) {
+                case "move": this.move(element, step[1], step[2]); break
+                case "scale": this.scale(element, step[1], step[2]); break
+                case "fadeIn": this.fadeIn(element, step[1]); break
+                case "fadeOut": this.fadeOut(element, step[1]); break
             }
         },
 
