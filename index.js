@@ -215,10 +215,14 @@ function animaster() {
         },
 
         resetMoveAndHide: function(element) {
-            element.style.transitionDuration = null;
-            element.style.transform = null;
-            element.classList.remove('hide');
-            element.classList.add('show');
+            // this.resetFadeOut(element);
+            resetMoveAndScale(element);
+            resetFadeOut(element);
+
+            // element.style.transitionDuration = null;
+            // element.style.transform = null;
+            // element.classList.remove('hide');
+            // element.classList.add('show');
             clearTimeout(moveAndHideTimeoutID);
         }
     }
