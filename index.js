@@ -7,6 +7,7 @@ function addListeners() {
     document.getElementById('fadeInPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeInBlock');
+            block.
             anim.fadeIn(block, 5000);
         });
 
@@ -28,8 +29,10 @@ function addListeners() {
         });
     document.getElementById('moveAndHide')
         .addEventListener('click', function () {
-            const block = document.getElementById('moveBlock');
-            anim.move(block, 1000, {x: 100, y: 20});
+            const block = document.getElementById('moveAndHideBlock');
+            let duration = 1000;
+            anim.move(block, duration*0.4, {x: 100, y: 20});
+            setTimeout(anim.fadeOut, duration*0.6, block, duration*0.4);
         });
     
 }
@@ -50,7 +53,7 @@ function getTransform(translation, ratio) {
 function animaster() {
 
     return animasterObject = {
-            /**
+        /**
          * Блок плавно появляется из прозрачного.
          * @param element — HTMLElement, который надо анимировать
          * @param duration — Продолжительность анимации в миллисекундах
