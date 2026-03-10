@@ -36,19 +36,19 @@ function addListeners() {
     document.getElementById('moveAndHide')
         .addEventListener('click', function () {
             const block = document.getElementById('moveAndHideBlock');
-            anim.moveAndHide(block, 3000);
+            let timeoutID = anim.moveAndHide(block, 3000);
         });
     
     document.getElementById('ResetMoveAndHide')
         .addEventListener('click', function () {
-            const block = document.getElementById('heartBeatingBlock');
-            anim.heartBeating(block);
+            const block = document.getElementById('moveAndHideBlock');
+            anim.resetMoveAndHide(block);
         });
 
     document.getElementById('showAndHide')
         .addEventListener('click', function () {
             const block = document.getElementById('showAndHideBlock');
-            animaster().showAndHide(block, 6000);
+            animaster().showAndHide(block, 5000);
         });
     
     document.getElementById('heartBeating')
@@ -108,8 +108,37 @@ function animaster() {
     let stopHeartTimer = null
     let _steps = [];
 
+    /**
+    * Сброс fadeIn анимации
+    * @param element — HTMLElement, на котором надо сбросить состояние
+    */
+    function resetFadeIn(element) {
+            element.style.transitionDuration = null;
+            element.classList.remove('show');
+            element.classList.add('hide');
+        }
+
+    /**
+    * Сброс fadeOut анимации
+    * @param element — HTMLElement, на котором надо сбросить состояние
+    */
+    function resetFadeOut(element) {
+        element.style.transitionDuration = null;
+        element.classList.remove('hide');
+        element.classList.add('show');
+    }
+
+    /**
+     * Сброс MoveAndScale анимации
+     * @param element — HTMLElement, на котором надо сбросить состояние
+     */
+    function resetMoveAndScale(element) {
+        element.style.transitionDuration = null;
+        element.style.transform = null;
+    }
+    let moveAndHideTimeoutID = 0;
+
     return animasterObject = {
-        
         
         /**
          * Блок плавно появляется из прозрачного.
@@ -156,13 +185,9 @@ function animaster() {
         },
         
         heartBeating: function heartBeating(element) {
-            let heartBeatingTimer = setInterval(this.heartBeat.bind(this, element), 1000);
-            stopHeartTimer = { 
-                stop: function () {
-                    clearInterval(heartBeatingTimer);
-                }
-            }
-            return stopHeartTimer
+            this.addScale(500, 1.4);
+            this.addScale(500, 1);
+            this.play(element);
         },
         heartBeatingStop: function heartBeatingStop() {
             console.log("stop")
@@ -210,10 +235,13 @@ function animaster() {
             }
         },
 
-        play: function play(element) {
+        play: function play(element, cycled=false) {
             let ctime = 0;
             for (let i = 0; i < _steps.length; i++) {
-                setTimeout(this.playStep.bind(this, element, _steps[i]), ctime);
+                if (cycled)
+                    setInterval(this.playStep.bind(this, element, _steps[i]), ctime)
+                else
+                    setTimeout(this.playStep.bind(this, element, _steps[i]), ctime);
                 ctime += _steps[i][1];
             }
             _steps = [];
@@ -221,11 +249,19 @@ function animaster() {
 
         moveAndHide: function moveAndHide(element, duration){
             this.move(element, duration*0.4, {x: 100, y: 20});
-            setTimeout(this.fadeOut, duration*0.6, element, duration*0.4);
+            moveAndHideTimeoutID = setTimeout(this.fadeOut, duration*0.6, element, duration*0.4);
         },
 
-        resetMoveAndHide: function() {
+        resetMoveAndHide: function(element) {
+            // this.resetFadeOut(element);
+            resetMoveAndScale(element);
+            resetFadeOut(element);
 
+            // element.style.transitionDuration = null;
+            // element.style.transform = null;
+            // element.classList.remove('hide');
+            // element.classList.add('show');
+            clearTimeout(moveAndHideTimeoutID);
         }
     }
 }
