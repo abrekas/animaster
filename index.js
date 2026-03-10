@@ -14,7 +14,8 @@ function addListeners() {
     document.getElementById('movePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('moveBlock');
-            anim.move(block, 1000, {x: 100, y: 10});
+            //anim.move(block, 1000, {x: 100, y: 10});
+            anim.addMove(500, {x: 20, y:20}).play(block);
         });
 
     document.getElementById('scalePlay')
@@ -168,5 +169,17 @@ function animaster() {
                 this.fadeOut(element, phaseDuration);
             }, phaseDuration * 2);
         },
+
+        addMove: function addMove(duration, translation) {
+            const dur = duration;
+            const trans = translation;
+            let animasterObj = this;
+
+            return moveObj = {
+                play: function play(element) {
+                    animasterObj.move(element, dur, trans)
+                }
+            }
+        }
     }
 }
