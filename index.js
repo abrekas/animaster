@@ -34,6 +34,12 @@ function addListeners() {
             anim.move(block, duration*0.4, {x: 100, y: 20});
             setTimeout(anim.fadeOut, duration*0.6, block, duration*0.4);
         });
+
+    document.getElementById('showAndHide')
+        .addEventListener('click', function () {
+            const block = document.getElementById('showAndHideBlock');
+            animaster().showAndHide(block, 6000);
+        });
     
     document.getElementById('heartBeating')
         .addEventListener('click', function () {
@@ -104,6 +110,18 @@ function animaster() {
         
         heartBeating: function heartBeating(element) {
             setInterval(this.heartBeat.bind(this, element), 1000);
-        }
+        },
+        /**
+         * блок должен появиться, подождать и исчезнуть
+         * @param element — HTMLElement, который надо анимировать
+         * @param duration — Продолжительность анимации в миллисекундах
+         */
+        showAndHide: function(element, duration) {
+            const phaseDuration = duration / 3;
+            this.fadeIn(element, phaseDuration);
+            setTimeout(() => {
+                this.fadeOut(element, phaseDuration);
+            }, phaseDuration * 2);
+        },
     }
 }
