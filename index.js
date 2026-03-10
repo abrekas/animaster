@@ -19,8 +19,9 @@ function addListeners() {
     document.getElementById('scalePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('scaleBlock');
-            anim.scale(block, 1000, 1.25);
+            anim.scale(block, 5000);
         });
+    
 }
 
 
@@ -48,6 +49,12 @@ function animaster() {
             element.style.transitionDuration =  `${duration}ms`;
             element.classList.remove('hide');
             element.classList.add('show');
+        },
+
+        fadeOut: function fadeOut(element, duration) {
+            element.style.transitionDuration =  `${duration}ms`;
+            element.classList.remove('show');
+            element.classList.add('hide');
         },
 
         /**
