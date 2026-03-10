@@ -42,7 +42,7 @@ function addListeners() {
     document.getElementById('showAndHide')
         .addEventListener('click', function () {
             const block = document.getElementById('showAndHideBlock');
-            animaster().showAndHide(block, 6000);
+            animaster().showAndHide(block, 5000);
         });
     
     document.getElementById('heartBeating')
