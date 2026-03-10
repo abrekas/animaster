@@ -46,6 +46,10 @@ function addListeners() {
             const block = document.getElementById('heartBeatingBlock');
             anim.heartBeating(block);
         });
+    document.getElementById('heartBeatingStop')
+        .addEventListener('click', function () {
+            anim.heartBeatingStop();
+        });
 }
 
 
@@ -62,8 +66,10 @@ function getTransform(translation, ratio) {
 }
 
 function animaster() {
+    let stopHeartTimer = null
 
     return animasterObject = {
+        
         /**
          * Блок плавно появляется из прозрачного.
          * @param element — HTMLElement, который надо анимировать
@@ -109,7 +115,17 @@ function animaster() {
         },
         
         heartBeating: function heartBeating(element) {
-            setInterval(this.heartBeat.bind(this, element), 1000);
+            let heartBeatingTimer = setInterval(this.heartBeat.bind(this, element), 1000);
+            stopHeartTimer = { 
+                stop: function () {
+                    clearInterval(heartBeatingTimer);
+                }
+            }
+            return stopHeartTimer
+        },
+        heartBeatingStop: function heartBeatingStop() {
+            console.log("stop")
+            stopHeartTimer.stop()
         },
         /**
          * блок должен появиться, подождать и исчезнуть
