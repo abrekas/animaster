@@ -185,9 +185,13 @@ function animaster() {
         },
         
         heartBeating: function heartBeating(element) {
-            this.addScale(500, 1.4);
-            this.addScale(500, 1);
-            this.play(element);
+            let heartBeatingTimer = setInterval(this.heartBeat.bind(this, element), 1000);
+            stopHeartTimer = { 
+                stop: function () {
+                    clearInterval(heartBeatingTimer);
+                }
+            }
+            return stopHeartTimer
         },
         heartBeatingStop: function heartBeatingStop() {
             console.log("stop")
