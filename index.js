@@ -22,6 +22,12 @@ function addListeners() {
             anim.scale(block, 5000);
         });
     
+    document.getElementById('moveAndHide')
+        .addEventListener('click', function () {
+            const block = document.getElementById('moveBlock');
+            anim.move(block, 1000, {x: 100, y: 20});
+        });
+    
 }
 
 
