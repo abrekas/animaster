@@ -19,9 +19,13 @@ function addListeners() {
     document.getElementById('scalePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('scaleBlock');
-            anim.scale(block, 5000);
+            anim.scale(block, 1000, 1.25);
         });
-    
+    document.getElementById('fadeOut')
+        .addEventListener('click', function () {
+            const block = document.getElementById('fadeOutBlock');
+            anim.fadeOut(block, 5000);
+        });
 }
 
 
