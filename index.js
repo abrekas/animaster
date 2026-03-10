@@ -14,13 +14,19 @@ function addListeners() {
         .addEventListener('click', function () {
             const block = document.getElementById('moveBlock');
             //anim.move(block, 1000, {x: 100, y: 10});
-            anim.addMove(500, {x: 20, y:20}).play(block);
+            anim.addMove(200, {x: 40, y: 40})
+            .addScale(800, 1.3)
+            .addMove(200, {x: 80, y: 0})
+            .addScale(800, 1)
+            .addMove(200, {x: 40, y: -40})
+            .addScale(800, 0.7)
+            anim.play(block);
         });
 
     document.getElementById('scalePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('scaleBlock');
-            anim.addScale(1000, 1.25).play(block);
+            anim.addScale(1000, 1.25).playStep(block);
         });
     document.getElementById('fadeOut')
         .addEventListener('click', function () {
@@ -69,38 +75,38 @@ function getTransform(translation, ratio) {
     return result.join(' ');
 }
 
+/**
+* Сброс fadeIn анимации
+* @param element — HTMLElement, на котором надо сбросить состояние
+*/
+function resetFadeIn(element) {
+        element.style.transitionDuration = null;
+        element.classList.remove('show');
+        element.classList.add('hide');
+    }
+
+/**
+* Сброс fadeOut анимации
+* @param element — HTMLElement, на котором надо сбросить состояние
+*/
+function resetFadeOut(element) {
+    element.style.transitionDuration = null;
+    element.classList.remove('hide');
+    element.classList.add('show');
+}
+
+/**
+ * Сброс MoveAndScale анимации
+ * @param element — HTMLElement, на котором надо сбросить состояние
+ */
+function resetMoveAndScale(element) {
+    element.style.transitionDuration = null;
+    element.style.transform = null;
+}
+
 function animaster() {
     let stopHeartTimer = null
     let _steps = [];
-
-    /**
-    * Сброс fadeIn анимации
-    * @param element — HTMLElement, на котором надо сбросить состояние
-    */
-    function resetFadeIn(element) {
-            element.style.transitionDuration = null;
-            element.classList.remove('show');
-            element.classList.add('hide');
-        }
-
-    /**
-    * Сброс fadeOut анимации
-    * @param element — HTMLElement, на котором надо сбросить состояние
-    */
-    function resetFadeOut(element) {
-        element.style.transitionDuration = null;
-        element.classList.remove('hide');
-        element.classList.add('show');
-    }
-
-    /**
-     * Сброс MoveAndScale анимации
-     * @param element — HTMLElement, на котором надо сбросить состояние
-     */
-    function resetMoveAndScale(element) {
-        element.style.transitionDuration = null;
-        element.style.transform = null;
-    }
 
     return animasterObject = {
         
@@ -177,36 +183,40 @@ function animaster() {
 
         addMove: function addMove(duration, translation) {
             _steps.push(["move", duration, translation])
-            console.log(_steps)
             return this;
         },
 
         addScale: function addScale(duration, ratio) {
             _steps.push(["scale", duration, ratio])
-            console.log(_steps)
             return this;
         },
 
         addFadeIn: function addFadeIn(duration) {
             _steps.push(["fadeIn", duration])
-            console.log(_steps)
             return this;
         },
 
         addFadeOut: function addFadeOut(duration) {
             _steps.push(["fadeOut", duration])
-            console.log(_steps)
             return this;
         },
 
-        play: function play(element) {
-            let step = _steps.pop();
+        playStep: function playStep(element, step) {
             switch (step[0]) {
                 case "move": this.move(element, step[1], step[2]); break
                 case "scale": this.scale(element, step[1], step[2]); break
                 case "fadeIn": this.fadeIn(element, step[1]); break
                 case "fadeOut": this.fadeOut(element, step[1]); break
             }
+        },
+
+        play: function play(element) {
+            let ctime = 0;
+            for (let i = 0; i < _steps.length; i++) {
+                setTimeout(this.playStep.bind(this, element, _steps[i]), ctime);
+                ctime += _steps[i][1];
+            }
+            _steps = [];
         },
 
         moveAndHide: function moveAndHide(element, duration){
